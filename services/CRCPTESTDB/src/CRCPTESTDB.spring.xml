@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+
+<!-- Generated 06/24/2013 11:41:10
+
+Configuration for 'CRCPTESTDB' database service
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+
+    <bean 
+        id="CRCPTESTDB"
+        class="com.crcptestdb.CRCPTESTDB"
+        scope="singleton"
+        lazy-init="true">
+        <property name="dataServiceManager">
+            <ref bean="CRCPTESTDBDataService"/>
+        </property>
+        <property name="taskManager">
+            <ref bean="CRCPTESTDBTaskMgr"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        class="com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:CRCPTESTDB.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean 
+        id="CRCPTESTDBDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
+        <property name="driverClassName" value="${CRCPTESTDB.driverClassName}"/>
+        <property name="url" value="${CRCPTESTDB.connectionUrl}"/>
+        <property name="username" value="${CRCPTESTDB.username}"/>
+        <property name="password" value="${CRCPTESTDB.password}"/>
+    </bean>
+
+
+    <bean 
+        id="CRCPTESTDBTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
+        <property name="sessionFactory">
+            <ref bean="CRCPTESTDBSessionFactory"/>
+        </property>
+    </bean>
+
+
+    <bean 
+        id="CRCPTESTDBHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+        <property name="sessionFactory"> 
+            <ref bean="CRCPTESTDBSessionFactory"/>
+        </property>
+    </bean>  
+
+
+    <bean 
+        id="CRCPTESTDBSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+        <!-- A unique name for this SessionFactory's configuration -->
+        <property name="name" value="CRCPTESTDB"/>
+        <property name="dataSource" ref="CRCPTESTDBDataSource"/>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${CRCPTESTDB.dialect}</prop>
+                <prop key="hibernate.transaction.factory_class">
+                    org.hibernate.transaction.JDBCTransactionFactory
+                </prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                
+            </props> 
+        </property>
+
+        <property name="mappingResources">
+            <list>
+
+<value>com/crcptestdb/data/Role.hbm.xml</value>
+<value>com/crcptestdb/data/Gyosha.hbm.xml</value>
+<value>com/crcptestdb/data/User.hbm.xml</value>
+
+<value>com/crcptestdb/data/Role.ql.xml</value>
+<value>com/crcptestdb/data/app-queries.ql.xml</value>
+
+            </list>
+        </property>
+
+    </bean>
+
+
+    <!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="CRCPTESTDBDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
+        <constructor-arg>
+            <!-- the value of the "name" property of the SessionFactory -->
+            <value>CRCPTESTDB</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="CRCPTESTDBHibernateTemplate"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="CRCPTESTDBTxMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="CRCPTESTDBTaskMgr"/>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="useIndividualCRUDOperations" value="false"/>
+                <entry key="refreshEntities" value=""/> 
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <bean 
+        id="CRCPTESTDBTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+
+    <bean class="com.wavemaker.runtime.service.events.EventWire"
+        lazy-init="false">
+        <property name="serviceWire" ref="CRCPTESTDBServiceWire"/>
+        <property name="eventListener">
+            <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
+        </property>
+    </bean>
+
+    <bean id="CRCPTESTDBServiceWire"
+        class="com.wavemaker.runtime.service.reflect.ReflectServiceWire"
+        lazy-init="false" scope="singleton">
+        <property name="serviceId" value="CRCPTESTDB"/>
+        <property name="serviceType" ref="DataService"/>
+    </bean>
+
+</beans>
