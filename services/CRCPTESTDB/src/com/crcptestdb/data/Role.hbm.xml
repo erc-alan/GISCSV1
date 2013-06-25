@@ -1,0 +1,36 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.crcptestdb.data.Role" table="ROLE" dynamic-insert="false" dynamic-update="false">
+        <id name="roleCd" type="string">
+            <column name="ROLE_CD" length="9"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="roleNm" type="string">
+            <column name="ROLE_NM" length="75" not-null="true"/>
+        </property>
+        <property name="dispOdr" type="short">
+            <column name="DISP_ODR"/>
+        </property>
+        <property name="biko" type="string">
+            <column name="BIKO" length="384"/>
+        </property>
+        <property name="delFlg" type="string">
+            <column name="DEL_FLG" length="1" not-null="true"/>
+        </property>
+        <property name="finUpdYmdhms" type="timestamp">
+            <column name="FIN_UPD_YMDHMS" length="19" not-null="true"/>
+        </property>
+        <property name="finUpdUserId" type="string">
+            <column name="FIN_UPD_USER_ID" length="10" not-null="true"/>
+        </property>
+        <property name="finUpdPrgId" type="string">
+            <column name="FIN_UPD_PRG_ID" length="10" not-null="true"/>
+        </property>
+        <set name="users" inverse="true" cascade="">
+            <key>
+                <column name="ROLE_CD" length="9" not-null="true"/>
+            </key>
+            <one-to-many class="com.crcptestdb.data.User"/>
+        </set>
+    </class>
+</hibernate-mapping>

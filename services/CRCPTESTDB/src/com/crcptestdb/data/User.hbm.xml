@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.crcptestdb.data.User" table="USER" dynamic-insert="false" dynamic-update="false">
+        <id name="usrId" type="string">
+            <column name="USR_ID" length="10"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="grpCd" type="string">
+            <column name="GRP_CD" length="10"/>
+        </property>
+        <property name="usrNm" type="string">
+            <column name="USR_NM" length="36" not-null="true"/>
+        </property>
+        <property name="usrNmKana" type="string">
+            <column name="USR_NM_KANA" length="72"/>
+        </property>
+        <property name="passwd" type="string">
+            <column name="PASSWD" length="40" not-null="true"/>
+        </property>
+        <property name="loginFukaFlg" type="string">
+            <column name="LOGIN_FUKA_FLG" length="1" not-null="true"/>
+        </property>
+        <property name="selfAdminCdUsr" type="string">
+            <column name="SELF_ADMIN_CD_USR" length="20"/>
+        </property>
+        <property name="delFlg" type="string">
+            <column name="DEL_FLG" length="1" not-null="true"/>
+        </property>
+        <property name="finUpdYmdhms" type="timestamp">
+            <column name="FIN_UPD_YMDHMS" length="19" not-null="true"/>
+        </property>
+        <property name="finUpdUserId" type="string">
+            <column name="FIN_UPD_USER_ID" length="10" not-null="true"/>
+        </property>
+        <many-to-one name="role" class="com.crcptestdb.data.Role">
+            <column name="ROLE_CD" length="9" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
