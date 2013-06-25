@@ -1,0 +1,13 @@
+{
+	"methods": [{
+		"name": "getRoleById",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.crcptestdb.data.Role"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "CRCPTESTDB.json"
+}
